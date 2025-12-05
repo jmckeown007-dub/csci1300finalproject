@@ -1,0 +1,122 @@
+#include <cstdlib>
+#include <ctime>
+#include <iostream>
+#include <string>
+#include <fstream>
+using namespace std;
+// DNA Sequencing Task 1: Strand Similarity (Equal Length)
+double strandSimilarity(string strand1, string strand2)
+{
+int matches = 0;
+int size = strand1.length();
+for (int i = 0; i < size; i++){
+    if (strand1[i] == strand2[i])
+    matches++;
+}
+double similarity = matches/size;
+return similarity;
+}
+// DNA Sequencing Task 2: Strand Similarity (Unequal Length)
+double (string input_strand, string target_strand){
+    int matches = 0;
+    int bestMatches = 0;
+    int bestPosition;
+    int inLength = input_strand.length();
+    int tgtLength = target_strand.length();
+    int lengthDiff = inLength - tgtLength;
+    for (int j = 0; j < lengthDiff; j++){
+        for (int i = 0; i < tgtLength; i++){
+            if (target_strand[i] == input_strand[i+j]){
+                matches++;
+            }
+        }
+        if (matches > bestMatches){
+            bestMatches = matches;
+            bestPosition = j;
+        }
+        matches = 0;
+    }
+    double similarityScore = bestMatches/inLength;
+    cout << "Best Similarity Score: " << similarityScore;
+    return bestPosition;
+}
+//DNA Sequencing Task 3: Mutation Identification
+void identifyMutations(string input_strand, string target_strand){
+    // Re-use of code for finding the best position before identifying mutations
+    int matches = 0;
+    int bestMatches = 0;
+    int bestPosition;
+    int inLength = input_strand.length();
+    int tgtLength = target_strand.length();
+    int lengthDiff = inLength - tgtLength;
+    // If the Input function is longer than the Target Function
+    if (inLength >= tgtLength){
+        for (int j = 0; j < lengthDiff; j++){
+            for (int i = 0; i < tgtLength; i++){
+                if (target_strand[i] == input_strand[i+j]){
+                    matches++;
+                }
+            }
+            if (matches > bestMatches){
+                bestMatches = matches;
+                bestPosition = j;
+            }
+            matches = 0;
+        }
+        // Printing deletions before and after target strand
+        for (int i = 0; i < bestPosition; i++){
+            cout << "Deletion at position" << i + 1 << input_strand[i] << "is deleted in target strand" << endl;
+        }
+        for (int i = bestPosition + tgtLength; i < inLength, i++){
+            cout << "Deletion at position" << i + 1 << input_strand[i] << "is deleted in target strand" << endl;
+        }
+    }
+    // If the Target Function is Longer than the Input Function
+    if (tgtLength > inLength){
+        for (int j = 0; j < lengthDiff; j++){
+            for (int i = 0; i < inLength; i++){
+                if (target_strand[i+j] == input_strand[i]){
+                    matches++;
+                }
+            }
+            if (matches > bestMatches){
+                bestMatches = matches;
+                bestPosition = j;
+            }
+            matches = 0;
+        }
+        // Printing insertions before and after target strand
+        for (int i = 0; i < bestPosition; i++){
+            cout << "Insertion at position" << i + 1 << input_strand[i] << "is inserted in input strand" << endl;
+        }
+        for (int i = bestPosition + tgtLength; i < inLength, i++){
+            cout << "Insertion at position" << i + 1 << input_strand[i] << "is inserted in input strand" << endl;
+        }
+    }
+    // Printing Mutations within aligned positions
+    for (int i = bestPosition; i < bestPosition + tgtLength; i++){
+        if (target_string[i] != input_string[i]){
+            cout << "Substitution at position " << i+1 << ": " << input_strand[i] << " -> " << target_strand[i] << endl;
+        }
+    }
+}
+// DNA Sequencing Task 4: Transcribe DNA to RNA
+void transcribeDNAtoRNA (string strand){
+    length = strand.length();
+    //Outputting Original DNA Strand
+    for (int i = 0, i < length, i++){
+        cout << strand[i] << " ";
+    }
+    cout << endl;
+    //Outputting Transcribed RNA Strand
+    cout << "Transcribed RNA Strand" << endl;
+    for (int i = 0; i < length; i++){
+        if (strand[i] == 'T'){
+            cout << 'U' << " "; 
+        }
+        else{
+            cout << strand[i];
+        }
+    }
+    cout << endl;
+}
