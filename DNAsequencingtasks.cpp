@@ -5,7 +5,7 @@
 #include <fstream>
 using namespace std;
 // DNA Sequencing Task 1: Strand Similarity (Equal Length)
-int strandSimilarity (string strand1, string strand2){
+bool strandSimilarity (string strand1, string strand2, int answer){
 int matches = 0;
 int size = strand1.length();
 for (int i = 0; i < size; i++){
@@ -13,10 +13,15 @@ for (int i = 0; i < size; i++){
     matches++;
 }
 double similarity = (double)matches/size;
-return matches;
+if (matches == answer){
+    return true;
+}
+else{
+    return false;
+}
 }
 // DNA Sequencing Task 2: Strand Similarity (Unequal Length)
-int bestStrandMatch (string input_strand, string target_strand){
+bool bestStrandMatch (string input_strand, string target_strand, int answer){
     int matches = 0;
     int bestMatches = 0;
     int bestPosition;
@@ -48,11 +53,16 @@ int bestStrandMatch (string input_strand, string target_strand){
     cout << "Best Similarity Score: " << similarityScore << endl;
 
     //cout << input_strand << " " << target_strand << endl;
-    return bestPosition;
+    if (answer == bestPosition){
+        return true;
+    }
+    else{
+        return false;
+    }
 
 }
 //DNA Sequencing Task 3: Mutation Identification
-int identifyMutations(string input_strand, string target_strand){
+bool identifyMutations(string input_strand, string target_strand, int answer){
     // Re-use of code for finding the best position before identifying mutations
     int matches = 0;
     int bestMatches = 0;
@@ -117,10 +127,15 @@ int identifyMutations(string input_strand, string target_strand){
         }
     }
     cout << "Best Position: "<< bestPosition << endl;
-    return substitutions;
+    if (answer == substitutions){
+        return true;
+    }
+    else{
+        return false;
+    }
 }
 // DNA Sequencing Task 4: Transcribe DNA to RNA
-string transcribeDNAtoRNA (string strand){
+bool transcribeDNAtoRNA (string strand, string answer){
     string RNA = " ";
     int length = strand.length();
     //Outputting Original DNA Strand
@@ -142,7 +157,12 @@ string transcribeDNAtoRNA (string strand){
         }
     }
     cout << endl;
-    return RNA;
+    if (answer == RNA){
+        return true;
+    }
+    else{
+        return false;
+    }
 }
 string randomDNAGenerator(int length){
     string DNA = " ";
