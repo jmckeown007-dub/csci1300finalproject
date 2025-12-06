@@ -138,6 +138,28 @@ void transcribeDNAtoRNA (string strand){
     }
     cout << endl;
 }
+string randomDNAGenerator(int length){
+    string DNA = " ";
+    srand(time(0));
+    for(int i = 0; i < length; i++){
+        int randint = rand()%4;
+        switch (randint){
+            case 0:
+            DNA = DNA + "A";
+            break;
+            case 1:
+            DNA = DNA + "C";
+            break;
+            case 2:
+            DNA = DNA + "T";
+            break;
+            case 3:
+            DNA = DNA + "G";
+            break;
+        }
+    }
+    return DNA;
+}
 int main (){
     //cout << "Task 1 Test:" << endl;
     //cout << "Strand Similarity: " << strandSimilarity ("ACTG", "ACCG") << endl;
@@ -150,6 +172,9 @@ int main (){
 
     //cout << "Task 4 Test:" << endl;
     //transcribeDNAtoRNA ("ACTG");
+
+    cout << "DNA Gerneration Test:" << endl;
+    cout << randomDNAGenerator(4) << endl;
 
     return 0;
 }
