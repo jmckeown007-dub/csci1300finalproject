@@ -52,7 +52,7 @@ int bestStrandMatch (string input_strand, string target_strand){
 
 }
 //DNA Sequencing Task 3: Mutation Identification
-void identifyMutations(string input_strand, string target_strand){
+int identifyMutations(string input_strand, string target_strand){
     // Re-use of code for finding the best position before identifying mutations
     int matches = 0;
     int bestMatches = 0;
@@ -60,6 +60,7 @@ void identifyMutations(string input_strand, string target_strand){
     int inLength = input_strand.length();
     int tgtLength = target_strand.length();
     int lengthDiff = abs(inLength - tgtLength);
+    int substitutions = 0;
     
     // If the input strand is longer than the target strand
     if (inLength >= tgtLength){
@@ -109,13 +110,14 @@ void identifyMutations(string input_strand, string target_strand){
     for (int i = bestPosition; i < bestPosition + tgtLength; i++){
         if (target_strand[i] != input_strand[i+bestPosition]){
             cout << "Substitution at position " << i+1 << ": " << input_strand[i] << " -> " << target_strand[i+bestPosition] << endl;
+            substitutions++;
         }
         else{
             cout << "Position " << i+1 << " is correct" << endl;
         }
     }
     cout << "Best Position: "<< bestPosition << endl;
-    
+    return substitutions;
 }
 // DNA Sequencing Task 4: Transcribe DNA to RNA
 string transcribeDNAtoRNA (string strand){
@@ -172,7 +174,7 @@ int main (){
     //bestStrandMatch ("ACTG", "ACTGACTG");
 
     //cout << "Task 3 Test:" << endl;
-    //identifyMutations("ACTG", "ACCGACTG");
+    //cout << identifyMutations("ACTG", "ACCGACTG");
 
     //cout << "Task 4 Test:" << endl;
     //transcribeDNAtoRNA ("ACTG");
