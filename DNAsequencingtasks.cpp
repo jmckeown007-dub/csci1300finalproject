@@ -118,7 +118,8 @@ void identifyMutations(string input_strand, string target_strand){
     
 }
 // DNA Sequencing Task 4: Transcribe DNA to RNA
-void transcribeDNAtoRNA (string strand){
+string transcribeDNAtoRNA (string strand){
+    string RNA = " ";
     int length = strand.length();
     //Outputting Original DNA Strand
     cout << "Original DNA Strand" << endl;
@@ -131,12 +132,15 @@ void transcribeDNAtoRNA (string strand){
     for (int i = 0; i < length; i++){
         if (strand[i] == 'T'){
             cout << 'U' << " "; 
+            RNA = RNA + "U";
         }
         else{
             cout << strand[i] << " ";
+            RNA = RNA + strand[i];
         }
     }
     cout << endl;
+    return RNA;
 }
 string randomDNAGenerator(int length){
     string DNA = " ";
@@ -173,8 +177,8 @@ int main (){
     //cout << "Task 4 Test:" << endl;
     //transcribeDNAtoRNA ("ACTG");
 
-    cout << "DNA Gerneration Test:" << endl;
-    cout << randomDNAGenerator(4) << endl;
+    //cout << "DNA Gerneration Test:" << endl;
+    //cout << randomDNAGenerator(4) << endl;
 
     return 0;
 }
