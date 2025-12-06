@@ -48,9 +48,3 @@ void updateLeaderboard(string newname, int newscore){
         outFile << names[i] << " " << scores[i] << endl;
     }
 }
-
-int main(){
-    //printLeaderboard();
-    //updateLeaderboard("PlayerX", 10000);
-    //printLeaderboard();
-}

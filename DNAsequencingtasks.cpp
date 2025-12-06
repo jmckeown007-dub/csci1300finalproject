@@ -166,21 +166,3 @@ string randomDNAGenerator(int length){
     }
     return DNA;
 }
-int main (){
-    //cout << "Task 1 Test:" << endl;
-    //cout << "Strand Similarity: " << strandSimilarity("ACTG", "ACCG") << endl;
-
-    //cout << "Task 2 Test:" << endl;
-    //bestStrandMatch ("ACTG", "ACTGACTG");
-
-    //cout << "Task 3 Test:" << endl;
-    //cout << identifyMutations("ACTG", "ACCGACTG");
-
-    //cout << "Task 4 Test:" << endl;
-    //transcribeDNAtoRNA ("ACTG");
-
-    //cout << "DNA Gerneration Test:" << endl;
-    //cout << randomDNAGenerator(4) << endl;
-
-    //return 0;
-}
