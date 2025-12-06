@@ -46,11 +46,3 @@ bool answerRiddle(int id, string answer){
         return false;
     }
 }
-
-int main(){
-    int id = displayRiddle();
-    string answer;
-    cin >> answer;
-    answerRiddle(id, answer);
-    return 0;
-}
