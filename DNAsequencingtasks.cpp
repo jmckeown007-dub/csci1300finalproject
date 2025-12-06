@@ -5,7 +5,7 @@
 #include <fstream>
 using namespace std;
 // DNA Sequencing Task 1: Strand Similarity (Equal Length)
-double strandSimilarity (string strand1, string strand2){
+int strandSimilarity (string strand1, string strand2){
 int matches = 0;
 int size = strand1.length();
 for (int i = 0; i < size; i++){
@@ -13,7 +13,7 @@ for (int i = 0; i < size; i++){
     matches++;
 }
 double similarity = (double)matches/size;
-return similarity;
+return matches;
 }
 // DNA Sequencing Task 2: Strand Similarity (Unequal Length)
 int bestStrandMatch (string input_strand, string target_strand){
@@ -168,7 +168,7 @@ string randomDNAGenerator(int length){
 }
 int main (){
     //cout << "Task 1 Test:" << endl;
-    //cout << "Strand Similarity: " << strandSimilarity ("ACTG", "ACCG") << endl;
+    //cout << "Strand Similarity: " << strandSimilarity("ACTG", "ACCG") << endl;
 
     //cout << "Task 2 Test:" << endl;
     //bestStrandMatch ("ACTG", "ACTGACTG");
