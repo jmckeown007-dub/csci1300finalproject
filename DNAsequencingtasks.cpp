@@ -182,5 +182,5 @@ int main (){
     //cout << "DNA Gerneration Test:" << endl;
     //cout << randomDNAGenerator(4) << endl;
 
-    return 0;
+    //return 0;
 }
