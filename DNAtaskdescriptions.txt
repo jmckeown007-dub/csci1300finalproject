@@ -1,0 +1,28 @@
+1st Task: Finding Strand Similarity
+
+Strand Similarity:
+Your task is to identify the number of matching nucleotides between these two sequences. (input a number)
+[strand 1]
+[strand 2]
+
+2nd Task: Strand Similarity with different lengths
+
+Strand Similarity II:
+Your task is to identify the position in which these two strands of DNA have the most matching nucleotides.
+Input the position on the longer strand that the first nucleotide of the shorter strand would align with.
+[long strand]
+[short strand]
+
+3rd Task: Mutations (strands can be equal or different lengths)
+
+Mutation Identification:
+Your task is to identify the number of substitutions made between these two strands in the position where they are best aligned.
+[long strand, if there is one]
+[short strand]
+
+4th Task: RNA Synthesis
+
+RNA Synthesis:
+Your task is to input the nucleotides that this DNA's corresponding RNA would have.
+Input sequence fully capitalized, with no spaces. Replace T nucleotides with U nucleotides to complete transcription.
+[strand]
