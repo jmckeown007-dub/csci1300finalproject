@@ -24,7 +24,7 @@ else{
 bool bestStrandMatch (string input_strand, string target_strand, int answer){
     int matches = 0;
     int bestMatches = 0;
-    int bestPosition;
+    vector <int> bestPosition;
     int inputLength = input_strand.length();
     int targetLength = target_strand.length();
     if (inputLength < targetLength){
@@ -35,7 +35,6 @@ bool bestStrandMatch (string input_strand, string target_strand, int answer){
         inputLength = targetLength;
         targetLength = tempint;
     }
-    cout << input_strand << " " << target_strand << endl;
     int lengthDiff = inputLength - targetLength;
     for (int j = 0; j <= lengthDiff; j++){
         for (int i = 0; i < targetLength; i++){
@@ -45,20 +44,22 @@ bool bestStrandMatch (string input_strand, string target_strand, int answer){
         }
         if (matches > bestMatches){
             bestMatches = matches;
-            bestPosition = j;
+            vector <int> bestPosition;
+            bestPosition.push_back(j+1);
+        }
+        if (matches == bestMatches){
+            bestPosition.push_back(j+1);
         }
         matches = 0;
     }
     double similarityScore = (double)bestMatches/targetLength;
     cout << "Best Similarity Score: " << similarityScore << endl;
-
-    //cout << input_strand << " " << target_strand << endl;
-    if (answer == bestPosition){
+    for (int i = 0; i < bestPosition.size(); i++){
+    if (answer == bestPosition[i]){
         return true;
     }
-    else{
-        return false;
     }
+    return false;
 
 }
 //DNA Sequencing Task 3: Mutation Identification
