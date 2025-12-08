@@ -31,7 +31,7 @@ using namespace std;
         characterStats = readCharacterStats();
     }
 
-    // getters
+    // Getters
     vector<vector<string>> characterSetUp::getCharacterStats() {
         return characterStats;
     }
@@ -48,7 +48,7 @@ using namespace std;
         return playerCharacterStats;
     }
 
-    // setters
+    // Setters
     void characterSetUp::setSelectedCharacter(string character) {
         selectedCharacter = character;
     }
@@ -156,7 +156,7 @@ using namespace std;
 
         int user_choice = -1;
         //cin >> user_choice;
-
+        // Intaking user choice + input validation
         while (user_choice < 1 || user_choice > characters.size()) {
             cout << "Make your choice..." << endl;
             cout << "" << endl;
@@ -244,7 +244,7 @@ using namespace std;
 
         return 0;
     }
-
+    // Puts character stats into a vector
     vector<string> characterSetUp::logPlayerCharacterStats() {
         vector<vector<string>> stats = characterStats;
         string characterName = getSelectedCharacter();
@@ -278,6 +278,7 @@ using namespace std;
 
         cin >> user_choice;
         cin.ignore();
+        // Input Validation
         while (user_choice != 1 && user_choice != 2 && user_choice != 3 && user_choice != 4 && user_choice != 5) {
             cout << "Invalid Selection, please choose again:" << endl;
             cout << "(1) Dr. Aliquot -- A master of the \"wet lab\", assisting in avoiding contamination" << endl;

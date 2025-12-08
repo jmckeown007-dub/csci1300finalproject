@@ -92,6 +92,7 @@ int main() {
     setup.setSelectedPath(chosenPath);
 
     if (chosenPath == 1) {
+        // Awarding stats based on path choice
         playerOne.setPath(1);
         playerOne.setAccuracy(playerOne.getAccuracy() + 500);
         playerOne.setEfficiency(playerOne.getEfficiency() + 500);
@@ -135,6 +136,7 @@ int main() {
 
     } 
     else if (chosenPath == 2) {
+        //Awarding stats based on path choice
         playerOne.setPath(2);
         playerOne.setAccuracy(playerOne.getAccuracy() + 200);
         playerOne.setEfficiency(playerOne.getEfficiency() + 200);
@@ -188,7 +190,7 @@ int main() {
     std::this_thread::sleep_for(std::chrono::seconds(1));
     int chosenPath2 = setup2.choosePath();
     setup2.setSelectedPath(chosenPath2);
-
+    //Stats and advisors are assigned for second player
     if (chosenPath2 == 1) {
         playerTwo.setPath(1);
         playerTwo.setAccuracy(playerTwo.getAccuracy() + 500);
@@ -271,7 +273,7 @@ int main() {
     bool playerTwoEnd = false;
     bool useAdvisor = false;
     int currentPlayer = 0;
-
+    // Main gameplay while loop, continues looping through players one and two until the game ends
     while (gameOver == false) {
         
         /* Player One's Turn */
@@ -393,6 +395,7 @@ int main() {
 
         if (playerOneEnd == true && playerTwoEnd == true) {
             gameOver = true;
+            //Leaderboard updates
             gf.updateLeaderboard(playerOne.getName(), playerOne.getDiscoveryPoints());
             gf.updateLeaderboard(playerTwo.getName(), playerTwo.getDiscoveryPoints());
             

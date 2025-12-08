@@ -6,7 +6,7 @@
 #include <sstream>
 #include <vector>
 using namespace std;
-
+// Reads riddles file into vectors of questions and answers, chooses a random riddle to display and returns the id# of the riddle
 int displayRiddle(){
     ifstream inFile;
     inFile.open ("riddles.txt");
@@ -24,7 +24,7 @@ int displayRiddle(){
     cout << riddles[id] << endl;
     return id;
 }
-
+// Reads riddle files into the same vectors as before, checks if the answer input is the same as the answer to the riddle of the id# passed in
 bool answerRiddle(int id, string answer){
     ifstream inFile;
     inFile.open ("riddles.txt");

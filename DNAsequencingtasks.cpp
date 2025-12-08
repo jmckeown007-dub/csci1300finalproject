@@ -7,11 +7,13 @@ using namespace std;
 // DNA Sequencing Task 1: Strand Similarity (Equal Length)
 bool strandSimilarity (string strand1, string strand2, int answer){
 int matches = 0;
+// Checks for matches in each position
 int size = strand1.length();
 for (int i = 0; i < size; i++){
     if (strand1[i] == strand2[i])
     matches++;
 }
+// Similarity is calculated but not used, was removed to streamline answer
 double similarity = (double)matches/size;
 if (matches == answer){
     return true;
@@ -27,6 +29,7 @@ bool bestStrandMatch (string input_strand, string target_strand, int answer){
     vector <int> bestPosition;
     int inputLength = input_strand.length();
     int targetLength = target_strand.length();
+    // Switches strands if necessary so that the input strand is always longer
     if (inputLength < targetLength){
         string temp = input_strand;
         input_strand = target_strand;
@@ -36,6 +39,7 @@ bool bestStrandMatch (string input_strand, string target_strand, int answer){
         targetLength = tempint;
     }
     int lengthDiff = inputLength - targetLength;
+    // Checks each potential position for the target string along the input string and saves every possibile correct answer
     for (int j = 0; j <= lengthDiff; j++){
         for (int i = 0; i < targetLength; i++){
             if (target_strand[i] == input_strand[i+j]){
@@ -53,7 +57,7 @@ bool bestStrandMatch (string input_strand, string target_strand, int answer){
         matches = 0;
     }
     double similarityScore = (double)bestMatches/targetLength;
-    cout << "Best Similarity Score: " << similarityScore << endl;
+    // cout << "Best Similarity Score: " << similarityScore << endl;
     for (int i = 0; i < bestPosition.size(); i++){
     if (answer == bestPosition[i]){
         return true;
@@ -168,6 +172,7 @@ bool transcribeDNAtoRNA (string strand, string answer){
 string randomDNAGenerator(int length){
     string DNA = " ";
     srand(time(0));
+    // Generates a string of random nucleotides of the requested length
     for(int i = 0; i < length; i++){
         int randint = rand()%4;
         switch (randint){

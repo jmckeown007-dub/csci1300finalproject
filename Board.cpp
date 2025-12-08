@@ -186,13 +186,14 @@ int Board::getPlayerPosition(int player_index) const {
 char Board::getTileColor(int player_index, int pos) {
     return _tiles[player_index][pos].color;
 }
-
+// Tile Trigger Function activates events based on the color of tile the player lands on. 
 Player Board::tileTrigger(Player player, char tileColor, int player_index) {
 
     switch(tileColor) {
+        // Green Tile Events
         case 'G': {
 
-            /*Debugging below because there was an issue with path's */
+            /*Debugging below because there was an issue with paths */
             //cout << "Debug: tileTrigger called with tileColor = " << tileColor << endl;
             //cout << "Debug: Player path value = " << player.getPath() << endl;
             if (rand() % 2 == 0) {
@@ -217,8 +218,9 @@ Player Board::tileTrigger(Player player, char tileColor, int player_index) {
                 int bioscript = 4;
                 int loci = 5;
 
-
+                // Player stats determine outcomes of random events: high stats can increase points earned from events and prevent losses from others
                 if (player.getPath() == 2) {
+                    // Accuracy based events
                     if (stoi(greenEvents[rand_num][4]) == accuracy) {
 
                         if (player.getAccuracy() >= abs(stoi(greenEvents[rand_num][3]))) {
@@ -261,7 +263,7 @@ Player Board::tileTrigger(Player player, char tileColor, int player_index) {
                             }
                         }
                     }
-
+                    // Efficiency based events
                     else if (stoi(greenEvents[rand_num][4]) == efficiency) {
 
                         if (player.getEfficiency() >= abs(stoi(greenEvents[rand_num][3]))) {
@@ -304,7 +306,7 @@ Player Board::tileTrigger(Player player, char tileColor, int player_index) {
                             }
                         }
                     }
-
+                    // Insight Based Events
                     else if (stoi(greenEvents[rand_num][4]) == insight) {
 
                         if (player.getInsight() >= abs(stoi(greenEvents[rand_num][3]))) {
@@ -351,7 +353,7 @@ Player Board::tileTrigger(Player player, char tileColor, int player_index) {
                 }
 
                 else if (player.getPath() == 1) {
-
+                    // Advisors Preventing discovery point loss from events
                     if (stoi(greenEvents[rand_num][2]) == 1 && player.getAdvisor() == "Dr. Aliquot") {
                         if (stoi(greenEvents[rand_num][3]) < 0) {
                             cout << "" << endl;
@@ -547,13 +549,14 @@ Player Board::tileTrigger(Player player, char tileColor, int player_index) {
 
 
             }
-
+            //Chance for nothing to occur on green tiles
             else {
                 cout << "Nothing seems to happen... this time" << endl;
                 cout << "" << endl;
             }
         break;
         }
+        // Blue Tile Event Triggers
         case 'B': {
 
             Features blueFeatures;
@@ -605,7 +608,7 @@ Player Board::tileTrigger(Player player, char tileColor, int player_index) {
             break;
         }
 
-
+        // Pink tile event triggers
         case 'P': {
 
             Features pinkFeatures;
@@ -664,7 +667,7 @@ Player Board::tileTrigger(Player player, char tileColor, int player_index) {
 
         break;
         }
-
+        // Red tile event Triggers
         case 'R': {
 
             Features redFeatures;
@@ -714,7 +717,7 @@ Player Board::tileTrigger(Player player, char tileColor, int player_index) {
 
         break;
         }
-
+        // Brown Tile Event Trigger
         case 'T': {
 
             Features brownFeatures;
@@ -754,7 +757,7 @@ Player Board::tileTrigger(Player player, char tileColor, int player_index) {
 
         break;
         }
-
+        // Purple Tile Event Triggers
         case 'U':
         Features purpleFeatures;
         // Player player; no need to reinitialize
@@ -792,11 +795,11 @@ Player Board::tileTrigger(Player player, char tileColor, int player_index) {
     return player;
 
 }
-
+// Saves previous board position to potentially move backwards one step
 void Board::savePreviousPosition(int player_index) {
         _previous_position[player_index] = _player_position[player_index];
 }
-
+// Activates moving back one step when players get answers wrong
 void Board::moveBackPosition(int player_index) {
         _player_position[player_index] = _previous_position[player_index];
 }
