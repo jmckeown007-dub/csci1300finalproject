@@ -18,6 +18,14 @@ using namespace std;
     
 
     // Constructor
+    characterSetUp::characterSetUp() {
+        characterStats = {};
+        int selectedPath = 0;
+        string selectedCharacter = "";
+        string filename = "";
+        playerCharacterStats = {};
+    }
+
     characterSetUp::characterSetUp(string file) {
         filename = file;
         characterStats = readCharacterStats();
@@ -85,7 +93,7 @@ using namespace std;
             while(getline (ss, word, '|')) {
 
                 if (word.back() == '\r') {
-                    word.pop_back();
+                    word.pop_back();            // avoid carriage returns so that last part of line is properly read
                 }
                 row.push_back(word);
             }
@@ -157,6 +165,7 @@ using namespace std;
             }
 
             cin >> user_choice;
+            cin.ignore();
 
             if (user_choice < 1 || user_choice > characters.size()) {
                 cout << "Invalid choice, please select a provided number" << endl;
@@ -190,7 +199,7 @@ using namespace std;
         cout << "----------------------------------" << endl;
 
         cout << underline << "Direct Lab Assignment" << reset << endl;
-        cout << "This path grants you an instant boost of 5,000 Discovery Points." << 
+        cout << "This path grants you an instant boost of 5,000 Discovery Points. " << 
         "However, you will receive fewer trait boosts and no initial advisor." << endl;
         cout << "+200 Accuracy Points" << endl;
         cout << "+200 Efficiency Points" << endl;
@@ -254,7 +263,35 @@ using namespace std;
         
     }
 
-    string characterSetUp::chooseAdvisor() {
+    int characterSetUp::chooseAdvisor() {
+
+        
+        
         cout << underline << "Choose your advisor: " << reset << endl;
+        cout << "(1) Dr. Aliquot -- A master of the \"wet lab\", assisting in avoiding contamination" << endl;
+        cout << "(2) Dr. Assembler -- An expert who helps improve efficiency and streamlines pipelines" << endl;
+        cout << "(3) Dr. Pop-Gen -- A genetics specialist with insight for identifying rare genetic variants" << endl;
+        cout << "(4) Dr. Bio-Script -- The genius behind the data analysis, helps debug code" << endl;
+        cout << "(5) Dr. Loci -- Your biggest supporter assisting you in learning the equipment" << endl;
+
+        int user_choice;
+
+        cin >> user_choice;
+        cin.ignore();
+        while (user_choice != 1 && user_choice != 2 && user_choice != 3 && user_choice != 4 && user_choice != 5) {
+            cout << "Invalid Selection, please choose again:" << endl;
+            cout << "(1) Dr. Aliquot -- A master of the \"wet lab\", assisting in avoiding contamination" << endl;
+            cout << "(2) Dr. Assembler -- An expert who helps improve efficiency and streamlines pipelines" << endl;
+            cout << "(3) Dr. Pop-Gen -- A genetics specialist with insight for identifying rare genetic variants" << endl;
+            cout << "(4) Dr. Bio-Script -- The genius behind the data analysis, helps debug code" << endl;
+            cout << "(5) Dr. Loci -- Your biggest supporter assisting you in learning the equipment" << endl;
+
+            cin >> user_choice;
+            cin.ignore();
+        }
+        
+
+        return user_choice;
+
     }
 

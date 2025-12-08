@@ -6,6 +6,15 @@
 #include <ctime>
 #include <iostream>
 #include <string>
+#include <cmath>
+#include "Scientists.h"
+#include "Player.h"
+#include "gameFeatures.h"
+#include "animateText.h"
+#define underline "\033[4m"
+#define reset "\033[0m"
+//#define underline "\033[24m"
+
 
 // Each of the following defines a macro
 // Essentially nicenames to use instead of the corresponding escape sequence ('\') 
@@ -21,16 +30,21 @@
 
 using namespace std;
 
+
 // =========================== Constructor ===========================
 
-Board::Board() {
+Board::Board(int playerOnePath, int playerTwoPath) {
     // Creates two players
     _player_count = _MAX_PLAYERS;
 
     // Initialize player's position
     for (int i = 0; i < _player_count; i++) {
         _player_position[i] = 0;
+        _previous_position[i] = 0;
     }
+
+    _player_paths[0] = playerOnePath;
+    _player_paths[1] = playerTwoPath;
 
     // Fill both lanes
     initializeBoard();
@@ -38,7 +52,7 @@ Board::Board() {
 
 // =========================== Private Member Functions ===========================
 
-void Board::initializeTiles(int player_index) {
+void Board::initializeTiles(int player_index, int player_path) {
     Tile tile;
     int green_count = 0;
     // Recall 52 from header file
@@ -55,10 +69,16 @@ void Board::initializeTiles(int player_index) {
         } 
         // Hard-coded target of 30 green tiles
         // Probablisitic method to spread out the green tiles randomly
-        else if (green_count < 30 && (rand() % (total_tiles - i) < 30 - green_count)) {
+        else if (player_path == 1 && green_count < 30 && (rand() % (total_tiles - i) < 30 - green_count)) {
             tile.color = 'G';
             green_count++;
         }
+
+        else if (player_path == 2 && green_count < 20 && (rand() % (total_tiles - i) < 20 - green_count)) {
+            tile.color = 'G';
+            green_count++;
+        }
+
         // Randomly assign one of the other colors: Blue, Pink, Brown, Red, Purple
         else {
             int color_choice = rand() % 5;
@@ -124,7 +144,7 @@ void Board::displayTile(int player_index, int pos) {
 void Board::initializeBoard() {
     for (int i = 0; i < 2; i++) {
         // This ensures each lane (or each player) has a unique tile distribution
-        initializeTiles(i);
+        initializeTiles(i, _player_paths[i]);
     }
 }
 
@@ -161,4 +181,615 @@ int Board::getPlayerPosition(int player_index) const {
         return _player_position[player_index];
     }
     return -1;
+}
+
+char Board::getTileColor(int player_index, int pos) {
+    return _tiles[player_index][pos].color;
+}
+
+Player Board::tileTrigger(Player player, char tileColor, int player_index) {
+
+    switch(tileColor) {
+        case 'G': {
+
+            /*Debugging below because there was an issue with path's */
+            //cout << "Debug: tileTrigger called with tileColor = " << tileColor << endl;
+            //cout << "Debug: Player path value = " << player.getPath() << endl;
+            if (rand() % 2 == 0) {
+                Features greenFeatures;
+
+                vector<vector<string>> greenEvents = greenFeatures.greenString("random_events_new.txt");
+
+                int rand_num = rand() % greenEvents.size();
+
+                cout << "" << endl;
+                cout << "Green Tile Event Time!" << endl;
+                cout << greenEvents[rand_num][0] << endl; // pick a random event from vector of events
+
+                int accuracy = 0;
+                int efficiency = 1; // initialize variables to compare to player's trait to calculate total discovery points change
+                int insight = 2;
+
+                int none = 0;
+                int aliquot = 1; // initialize variables to compare to player's advisor
+                int assembler = 2;
+                int popgen = 3;
+                int bioscript = 4;
+                int loci = 5;
+
+
+                if (player.getPath() == 2) {
+                    if (stoi(greenEvents[rand_num][4]) == accuracy) {
+
+                        if (player.getAccuracy() >= abs(stoi(greenEvents[rand_num][3]))) {
+                            if (stoi(greenEvents[rand_num][3]) < 0) {
+                                cout << "" << endl;
+                                cout << "Your accuracy was high enough to prevent any loss of discovery points!" << endl;
+                                cout << "+1 Exp" << endl;
+                                player.setExp(player.getExp() + 1);
+                                cout << "" << endl;
+                                return player;
+                            }
+                            else if (stoi(greenEvents[rand_num][3]) > 0) {
+                                cout << "" << endl;
+                                cout << "Your accuracy was high enough to gain double discovery points!" << endl;
+                                cout << "You have gained: " << 2 * stoi(greenEvents[rand_num][3]) << " Discovery Points" << endl;
+                                cout << "+1 Exp" << endl;
+                                player.setExp(player.getExp() + 1);
+                                cout << "" << endl;
+                                player.setDiscoveryPoints(player.getDiscoveryPoints() + (2 * stoi(greenEvents[rand_num][3])));
+                                return player;
+                            }
+                        }
+
+                        else {
+                            if (stoi(greenEvents[rand_num][3]) < 0) {
+                                cout << "" << endl;
+                                cout << "You have lost: " << greenEvents[rand_num][3] << " Discovery Points" << endl;
+                                cout << "" << endl;
+                                player.setDiscoveryPoints(player.getDiscoveryPoints() + stoi(greenEvents[rand_num][3]));
+                                return player;
+                            }
+                            else if (stoi(greenEvents[rand_num][3]) > 0) {
+                                cout << "" << endl;
+                                cout << "You have gained: " << greenEvents[rand_num][3] << " Discovery Points" << endl;
+                                cout << "+1 Exp" << endl;
+                                player.setExp(player.getExp() + 1);
+                                cout << "" << endl;
+                                player.setDiscoveryPoints(player.getDiscoveryPoints() + (stoi(greenEvents[rand_num][3])));
+                                return player;
+                            }
+                        }
+                    }
+
+                    else if (stoi(greenEvents[rand_num][4]) == efficiency) {
+
+                        if (player.getEfficiency() >= abs(stoi(greenEvents[rand_num][3]))) {
+                            if (stoi(greenEvents[rand_num][3]) < 0) {
+                                cout << "" << endl;
+                                cout << "Your efficiency was high enough to prevent any loss of discovery points!" << endl;
+                                cout << "+1 Exp" << endl;
+                                player.setExp(player.getExp() + 1);
+                                cout << "" << endl;
+                                return player;
+                            }
+                            else if (stoi(greenEvents[rand_num][3]) > 0) {
+                                cout << "" << endl;
+                                cout << "Your efficiency was high enough to gain double discovery points!" << endl;
+                                cout << "You have gained: " << 2 * stoi(greenEvents[rand_num][3]) << " Discovery Points" << endl;
+                                cout << "+1 Exp" << endl;
+                                player.setExp(player.getExp() + 1);
+                                cout << "" << endl;
+                                player.setDiscoveryPoints(player.getDiscoveryPoints() + (2 * stoi(greenEvents[rand_num][3])));
+                                return player;
+                            }
+                        }
+
+                        else {
+                            if (stoi(greenEvents[rand_num][3]) < 0) {
+                                cout << "" << endl;
+                                cout << "You have lost: " << greenEvents[rand_num][3] << " Discovery Points" << endl;
+                                cout << "" << endl;
+                                player.setDiscoveryPoints(player.getDiscoveryPoints() + stoi(greenEvents[rand_num][3]));
+                                return player;
+                            }
+                            else if (stoi(greenEvents[rand_num][3]) > 0) {
+                                cout << "" << endl;
+                                cout << "You have gained: " << greenEvents[rand_num][3] << " Discovery Points" << endl;
+                                cout << "+1 Exp" << endl;
+                                player.setExp(player.getExp() + 1);
+                                cout << "" << endl;
+                                player.setDiscoveryPoints(player.getDiscoveryPoints() + (stoi(greenEvents[rand_num][3])));
+                                return player;
+                            }
+                        }
+                    }
+
+                    else if (stoi(greenEvents[rand_num][4]) == insight) {
+
+                        if (player.getInsight() >= abs(stoi(greenEvents[rand_num][3]))) {
+                            if (stoi(greenEvents[rand_num][3]) < 0) {
+                                cout << "" << endl;
+                                cout << "Your insight was high enough to prevent any loss of discovery points!" << endl;
+                                cout << "+1 Exp" << endl;
+                                player.setExp(player.getExp() + 1);
+                                cout << "" << endl;
+                                return player;
+                            }
+                            else if (stoi(greenEvents[rand_num][3]) > 0) {
+                                cout << "" << endl;
+                                cout << "Your insight was high enough to gain double discovery points!" << endl;
+                                cout << "You have gained: " << 2 * stoi(greenEvents[rand_num][3]) << " Discovery Points" << endl;
+                                cout << "+1 Exp" << endl;
+                                player.setExp(player.getExp() + 1);
+                                cout << "" << endl;
+                                player.setDiscoveryPoints(player.getDiscoveryPoints() + (2 * stoi(greenEvents[rand_num][3])));
+                                return player;
+                            }
+                        }
+
+                        else {
+                            if (stoi(greenEvents[rand_num][3]) < 0) {
+                                cout << "" << endl;
+                                cout << "You have lost: " << greenEvents[rand_num][3] << " Discovery Points" << endl;
+                                cout << "" << endl;
+                                player.setDiscoveryPoints(player.getDiscoveryPoints() + stoi(greenEvents[rand_num][3]));
+                                return player;
+                            }
+                            else if (stoi(greenEvents[rand_num][3]) > 0) {
+                                cout << "" << endl;
+                                cout << "You have gained: " << greenEvents[rand_num][3] << " Discovery Points" << endl;
+                                cout << "+1 Exp" << endl;
+                                player.setExp(player.getExp() + 1);
+                                cout << "" << endl;
+                                player.setDiscoveryPoints(player.getDiscoveryPoints() + (stoi(greenEvents[rand_num][3])));
+                                return player;
+                            }
+                        }
+                    }
+                    
+                }
+
+                else if (player.getPath() == 1) {
+
+                    if (stoi(greenEvents[rand_num][2]) == 1 && player.getAdvisor() == "Dr. Aliquot") {
+                        if (stoi(greenEvents[rand_num][3]) < 0) {
+                            cout << "" << endl;
+                            cout << "Your advisor has prevented you from losing any Discovery Points" << endl;
+                            cout << "+1 Exp" << endl;
+                            player.setExp(player.getExp() + 1);
+                            cout << "" << endl;
+                            return player;
+                        }           
+
+                        else {return player;}
+                    }
+
+                    else if (stoi(greenEvents[rand_num][2]) == 2 && player.getAdvisor() == "Dr. Assembler") {
+                        if (stoi(greenEvents[rand_num][3]) < 0) {
+                            cout << "" << endl;
+                            cout << "Your advisor has prevented you from losing any Discovery Points" << endl;
+                            cout << "+1 Exp" << endl;
+                            player.setExp(player.getExp() + 1);
+                            cout << "" << endl;
+                            return player;
+                        }    
+                        else {return player;}       
+                    }
+
+                    else if (stoi(greenEvents[rand_num][2]) == 3 && player.getAdvisor() == "Dr. Pop-Gen") {
+                        if (stoi(greenEvents[rand_num][3]) < 0) {
+                            cout << "" << endl;
+                            cout << "Your advisor has prevented you from losing any Discovery Points" << endl;
+                            cout << "+1 Exp" << endl;
+                            player.setExp(player.getExp() + 1);
+                            cout << "" << endl;
+                            return player;
+                        }    
+                        else {return player;}       
+                    }
+
+                    else if (stoi(greenEvents[rand_num][2]) == 4 && player.getAdvisor() == "Dr. Bio-Script") {
+                        if (stoi(greenEvents[rand_num][3]) < 0) {
+                            cout << "" << endl;
+                            cout << "Your advisor has prevented you from losing any Discovery Points" << endl;
+                            cout << "+1 Exp" << endl;
+                            player.setExp(player.getExp() + 1);
+                            cout << "" << endl;
+                            return player;
+                        }    
+                        else {return player;}       
+                    }
+
+                    else if (stoi(greenEvents[rand_num][2]) == 5 && player.getAdvisor() == "Dr. Loci") {
+                        if (stoi(greenEvents[rand_num][3]) < 0) {
+                            cout << "" << endl;
+                            cout << "Your advisor has prevented you from losing any Discovery Points" << endl;
+                            cout << "+1 Exp" << endl;
+                            player.setExp(player.getExp() + 1);
+                            cout << "" << endl;
+                            return player;
+                        }    
+                        else {return player;}       
+                    }
+
+                    else if (stoi(greenEvents[rand_num][4]) == accuracy) {
+
+                        if (player.getAccuracy() >= abs(stoi(greenEvents[rand_num][3]))) {
+                            if (stoi(greenEvents[rand_num][3]) < 0) {
+                                cout << "" << endl;
+                                cout << "Your accuracy was high enough to prevent any loss of discovery points!" << endl;
+                                cout << "+1 Exp" << endl;
+                                player.setExp(player.getExp() + 1);
+                                cout << "" << endl;
+                                return player;
+                            }
+                            else if (stoi(greenEvents[rand_num][3]) > 0) {
+                                cout << "" << endl;
+                                cout << "Your accuracy was high enough to gain double discovery points!" << endl;
+                                cout << "You have gained: " << 2 * stoi(greenEvents[rand_num][3]) << " Discovery Points" << endl;
+                                cout << "+1 Exp" << endl;
+                                player.setExp(player.getExp() + 1);
+                                cout << "" << endl;
+                                player.setDiscoveryPoints(player.getDiscoveryPoints() + (2 * stoi(greenEvents[rand_num][3])));
+                                return player;
+                            }
+                        }
+
+                        else {
+                            if (stoi(greenEvents[rand_num][3]) < 0) {
+                                cout << "" << endl;
+                                cout << "You have lost: " << greenEvents[rand_num][3] << " Discovery Points" << endl;
+                                cout << "" << endl;
+                                player.setDiscoveryPoints(player.getDiscoveryPoints() + stoi(greenEvents[rand_num][3]));
+                                return player;
+                            }
+                            else if (stoi(greenEvents[rand_num][3]) > 0) {
+                                cout << "" << endl;
+                                cout << "You have gained: " << greenEvents[rand_num][3] << " Discovery Points" << endl;
+                                cout << "+1 Exp" << endl;
+                                player.setExp(player.getExp() + 1);
+                                cout << "" << endl;
+                                player.setDiscoveryPoints(player.getDiscoveryPoints() + (2 * stoi(greenEvents[rand_num][3])));
+                                return player;
+                            }
+                        }
+                    }
+                    
+
+                    else if (stoi(greenEvents[rand_num][4]) == efficiency) {
+
+                        if (player.getEfficiency() >= abs(stoi(greenEvents[rand_num][3]))) {
+                            if (stoi(greenEvents[rand_num][3]) < 0) {
+                                cout << "" << endl;
+                                cout << "Your efficiency was high enough to prevent any loss of discovery points!" << endl;
+                                cout << "+1 Exp" << endl;
+                                player.setExp(player.getExp() + 1);
+                                cout << "" << endl;
+                                return player;
+                            }
+                            else if (stoi(greenEvents[rand_num][3]) > 0) {
+                                cout << "" << endl;
+                                cout << "Your efficiency was high enough to gain double discovery points!" << endl;
+                                cout << "You have gained: " << 2 * stoi(greenEvents[rand_num][3]) << " Discovery Points" << endl;
+                                cout << "+1 Exp" << endl;
+                                player.setExp(player.getExp() + 1);
+                                cout << "" << endl;
+                                player.setDiscoveryPoints(player.getDiscoveryPoints() + (2 * stoi(greenEvents[rand_num][3])));
+                                return player;
+                            }
+                        }
+
+                        else {
+                            if (stoi(greenEvents[rand_num][3]) < 0) {
+                                cout << "" << endl;
+                                cout << "You have lost: " << greenEvents[rand_num][3] << " Discovery Points" << endl;
+                                cout << "" << endl;
+                                player.setDiscoveryPoints(player.getDiscoveryPoints() + stoi(greenEvents[rand_num][3]));
+                                return player;
+                            }
+                            else if (stoi(greenEvents[rand_num][3]) > 0) {
+                                cout << "" << endl;
+                                cout << "You have gained: " << greenEvents[rand_num][3] << " Discovery Points" << endl;
+                                cout << "+1 Exp" << endl;
+                                player.setExp(player.getExp() + 1);
+                                cout << "" << endl;
+                                player.setDiscoveryPoints(player.getDiscoveryPoints() + (2 * stoi(greenEvents[rand_num][3])));
+                                return player;
+                            }
+                        }
+                    }
+
+                    else if (stoi(greenEvents[rand_num][4]) == insight) {
+
+                        if (player.getInsight() >= abs(stoi(greenEvents[rand_num][3]))) {
+                            if (stoi(greenEvents[rand_num][3]) < 0) {
+                                cout << "" << endl;
+                                cout << "Your insight was high enough to prevent any loss of discovery points!" << endl;
+                                cout << "+1 Exp" << endl;
+                                player.setExp(player.getExp() + 1);
+                                cout << "" << endl;
+                                return player;
+                            }
+                            else if (stoi(greenEvents[rand_num][3]) > 0) {
+                                cout << "" << endl;
+                                cout << "Your insight was high enough to gain double discovery points!" << endl;
+                                cout << "You have gained: " << 2 * stoi(greenEvents[rand_num][3]) << " Discovery Points" << endl;
+                                cout << "+1 Exp" << endl;
+                                player.setExp(player.getExp() + 1);
+                                cout << "" << endl;
+                                player.setDiscoveryPoints(player.getDiscoveryPoints() + (2 * stoi(greenEvents[rand_num][3])));
+                                return player;
+                            }
+                        }
+
+                        else {
+                            if (stoi(greenEvents[rand_num][3]) < 0) {
+                                cout << "" << endl;
+                                cout << "You have lost: " << greenEvents[rand_num][3] << " Discovery Points" << endl;
+                                cout << "" << endl;
+                                player.setDiscoveryPoints(player.getDiscoveryPoints() + stoi(greenEvents[rand_num][3]));
+                                return player;
+                            }
+                            else if (stoi(greenEvents[rand_num][3]) > 0) {
+                                cout << "" << endl;
+                                cout << "You have gained: " << greenEvents[rand_num][3] << " Discovery Points" << endl;
+                                cout << "+1 Exp" << endl;
+                                player.setExp(player.getExp() + 1);
+                                cout << "" << endl;
+                                player.setDiscoveryPoints(player.getDiscoveryPoints() + (2 * stoi(greenEvents[rand_num][3])));
+                                return player;
+                            }
+                        }
+                    }
+                }
+
+
+
+            }
+
+            else {
+                cout << "Nothing seems to happen... this time" << endl;
+                cout << "" << endl;
+            }
+        break;
+        }
+        case 'B': {
+
+            Features blueFeatures;
+            // Player player; no need to reinitialize
+            cout << "" << endl;
+            cout << "Blue Tile Event Time!" << endl;
+            cout << "" << endl;
+
+            int dnaLength = rand() % 9 + 4;
+            string strand1 = blueFeatures.randomDNAGenerator(dnaLength);
+            string strand2 = blueFeatures.randomDNAGenerator(dnaLength); // variables for parameters for first DNA sequence function and task
+
+            if (strand2 > strand1) {     // make sure that strand 1 is always longer so there is no issue when it's passed as a parameter
+                string temp;
+                temp = strand1;
+                strand1 = strand2;
+                strand2 = temp;
+            }
+            int user_answer;
+
+            cout << "For this easy task, you must provide the total number of positions that are identical between two different strand halves of equal length." << endl;
+            cout << "" << endl;
+            cout << "DNA Strand One: " << strand1 << endl;
+            cout << "DNA Strand Two: " << strand2 << endl;
+            cout << "How many positions are identical between both strands?" << endl;
+            cin >> user_answer;
+            cin.ignore();
+            cout << "" << endl;
+
+            if (blueFeatures.strandSimilarity(strand1, strand2, user_answer)) {
+                cout << "Correct! You have gained 200 Discovery Points" << endl;
+                cout << "+1 Exp" << endl;
+                player.setExp(player.getExp() + 1);
+                cout << "" << endl;
+                player.setDiscoveryPoints(player.getDiscoveryPoints() + 200);
+                return player;
+            }
+
+            else {
+                cout << "Incorrect! You have lost 200 Discovery Points and went back to your previous position" << endl;
+                moveBackPosition(player_index);
+                cout << "" << endl;
+                player.setDiscoveryPoints(player.getDiscoveryPoints() - 200);
+                return player;
+            }
+
+
+
+            break;
+        }
+
+
+        case 'P': {
+
+            Features pinkFeatures;
+            // Player player; no need to reinitialize
+            cout << "" << endl;
+            cout << "Pink Tile Event Time!" << endl;
+            cout << "" << endl;
+
+            int dnaOneLength = rand() % 9 + 4;
+            int dnaTwoLength = rand() % 9 + 4;
+            string strand1 = pinkFeatures.randomDNAGenerator(dnaOneLength);
+            string strand2 = pinkFeatures.randomDNAGenerator(dnaTwoLength); // variables for parameters for second DNA sequence function and task
+            if (strand2 > strand1) {
+                string temp;
+                temp = strand1;
+                strand1 = strand2;
+                strand2 = temp;
+            }
+            int user_answer;
+
+            cout << "For this task, you will be provided two DNA strand halves. You must find the position (integral value 1, 2, etc.) on the longer strand where the shorter strand has the closest similarity score." << endl;
+            cout << "Remember, the shorter DNA piece must fit completely onto the longer one. No overhangs allowed!";
+            cout << "" << endl;
+            cout << "DNA Strand: " << strand1 << endl;
+            cout << "DNA Strand: " << strand2 << endl;
+            cout << "" << endl;
+            cout << "At what position (integral value), on the longer strand, does the shorter strand have the best similarity score? " << endl;
+            cout << "Remember, there can be multiple right answers." << endl;
+            cin >> user_answer;
+            cin.ignore();
+            cout << "" << endl;
+
+            if (pinkFeatures.bestStrandMatch(strand1, strand2, user_answer)) {
+                cout << "Correct! You have gained 400 Discovery Points" << endl;
+                cout << "+1 Exp" << endl;
+                player.setExp(player.getExp() + 1);
+                cout << "" << endl;
+                player.setDiscoveryPoints(player.getDiscoveryPoints() + 400);
+                return player;
+            }
+
+            else {
+                cout << "Incorrect! You have lost 400 Discovery Points and went back to your previous position" << endl;
+                moveBackPosition(player_index);
+                cout << "" << endl;
+                player.setDiscoveryPoints(player.getDiscoveryPoints() - 400);
+                return player;
+            }
+
+        break;
+        }
+
+        case 'R': {
+
+            Features redFeatures;
+            cout << "" << endl;
+            cout << "Red Tile Event Time!" << endl;
+            cout << "" << endl;
+
+            int dnaOneLength = rand() % 9 + 4;
+            int dnaTwoLength = rand() % 9 + 4;
+            string strand1 = redFeatures.randomDNAGenerator(dnaOneLength);
+            string strand2 = redFeatures.randomDNAGenerator(dnaTwoLength); // variables for parameters for second DNA sequence function and task
+            if (strand2 > strand1) {
+                string temp;
+                temp = strand1;
+                strand1 = strand2;
+                strand2 = temp;
+            }
+            int user_answer;
+
+            cout << "For this difficult task, you will be provided with two DNA strand halves. You must calculate the total number of substitutions wherever the two strand halves have the greatest similarity." << endl;
+            cout << "Remember, when looking for similarity, the shorter DNA piece must fit completely onto the longer one. No overhangs allowed!";
+            cout << "" << endl;
+            cout << "DNA Strand: " << strand1 << endl;
+            cout << "DNA Strand: " << strand2 << endl;
+            cout << "" << endl;
+            cout << "At the point of greatest similarity, how many substitutions are there?" << endl;
+            cin >> user_answer;
+            cin.ignore();
+            cout << "" << endl;
+            
+            if (redFeatures.identifyMutations(strand1, strand2, user_answer)) {
+                cout << "Correct! You have gained 800 Discovery Points" << endl;
+                cout << "+1 Exp" << endl;
+                player.setDiscoveryPoints(player.getDiscoveryPoints() + 800);
+                player.setExp(player.getExp() + 1);
+                cout << "" << endl;
+                return player;
+            }
+
+            else {
+                cout << "Incorrect! You have lost 800 Discovery Points and went back to your previous position" << endl;
+                moveBackPosition(player_index);
+                cout << "" << endl;
+                player.setDiscoveryPoints(player.getDiscoveryPoints() - 800);
+                return player;
+            }
+
+        break;
+        }
+
+        case 'T': {
+
+            Features brownFeatures;
+            // Player player; no need to reinitialize
+            cout << "" << endl;
+            cout << "Brown Tile Event Time!" << endl;
+            cout << "" << endl;
+
+            int dnaLength = rand() % 9 + 4;
+            string strand = brownFeatures.randomDNAGenerator(dnaLength); // variables for parameters for fourth DNA sequence function and task
+            string user_answer;
+
+            cout << "For this task, you will be giving a DNA strand half, and you must provide the corresponding RNA strand. (Hint, T = U)" << endl;
+            cout << "" << endl;
+            cout << "DNA Strand: " << strand << endl;
+            cout << "What would be the corresponding RNA Strand?" << endl;
+            cin >> user_answer;
+            cin.ignore();
+            cout << "" << endl;
+
+            if (brownFeatures.transcribeDNAtoRNA(strand, user_answer)) {
+                cout << "Correct! You have gained 600 Discovery Points!" << endl;
+                cout << "+1 Exp" << endl;
+                player.setExp(player.getExp() + 1);
+                cout << "" << endl;
+                player.setDiscoveryPoints(player.getDiscoveryPoints() + 600);
+                return player;
+            }
+
+            else {
+                cout << "Incorrect! You have lost 600 Discovery Points and went back to your previous position" << endl;
+                moveBackPosition(player_index);
+                cout << "" << endl;
+                player.setDiscoveryPoints(player.getDiscoveryPoints() - 600);
+                return player;
+            }
+
+        break;
+        }
+
+        case 'U':
+        Features purpleFeatures;
+        // Player player; no need to reinitialize
+        cout << "" << endl;
+        cout << "Purple Tile Event Time!" << endl;
+        cout << "" << endl;
+        cout << "It's time to answer a riddle..." << endl;
+
+        int riddle_int = purpleFeatures.displayRiddle();
+        string user_answer;
+        cin >> user_answer;
+        cin.ignore();
+        cout << "" << endl;
+
+        if (purpleFeatures.answerRiddle(riddle_int, user_answer)) {
+            cout << "That's correct! You have gained 500 Insight Points and 100 Discovery Points" << endl;
+            cout << "+1 Exp" << endl;
+            player.setExp(player.getExp() + 1);
+            cout << "" << endl;
+            player.setInsight(player.getInsight() + 500);
+            player.setDiscoveryPoints(player.getDiscoveryPoints() + 100);
+            return player;
+        }
+
+        else {
+            cout << "That's incorrect! You have lost 100 Discovery Points and went back to your previous position" << endl;
+            moveBackPosition(player_index);
+            cout << "" << endl;
+            player.setDiscoveryPoints(player.getDiscoveryPoints() - 100);
+            return player;
+        }
+
+        break;
+    }
+    return player;
+
+}
+
+void Board::savePreviousPosition(int player_index) {
+        _previous_position[player_index] = _player_position[player_index];
+}
+
+void Board::moveBackPosition(int player_index) {
+        _player_position[player_index] = _previous_position[player_index];
 }

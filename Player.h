@@ -1,6 +1,10 @@
 #include <iostream>
 #include <string>
 #include "Scientists.h"
+
+#ifndef PLAYER_H
+#define PLAYER_H
+
 using namespace std;
 
 class Player {
@@ -13,6 +17,8 @@ class Player {
         int insight;
         int discoveryPoints;
         int path;
+        string advisor;
+        string advisorDesc;
     
     public:
         Player(); //default constructor
@@ -27,6 +33,8 @@ class Player {
         int getInsight();
         int getDiscoveryPoints();
         int getPath();
+        string getAdvisor();
+        string getAdvisorDesc();
 
 
         // setters
@@ -38,12 +46,18 @@ class Player {
         void setInsight(int ins);
         void setDiscoveryPoints(int dp);
         void setPath(int playerPath);
+        void setAdvisor(string playerAdvisor);
+        void setAdvisorDesc(string playerAdvisorDesc);
 
-        
+        // get player stats
+        vector<string> getAllStats();
+
         // set player stats
         void setAllStats(vector<string> stats);
 
         // display menu
-        void displayMenu();
+        int displayMenu();
 
 };
+
+#endif

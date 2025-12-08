@@ -6,6 +6,7 @@
 #include <vector>
 #include "Scientists.h"
 #include "Player.h"
+#include "Board.h"
 #define underline "\033[4m"
 #define reset "\033[0m"
 //#define underline "\033[24m"
@@ -20,6 +21,8 @@ Player::Player() {
     efficiency = 0;
     insight = 0;
     discoveryPoints = 0;
+    advisor = "";
+    advisorDesc = "";
 }
 
 Player::Player(string playerName, string chosenCharacter, int xp, int acc, int eff, int ins, int dp, int playerPath) {
@@ -59,6 +62,12 @@ Player::Player(string playerName, string chosenCharacter, int xp, int acc, int e
     int Player::getPath() {
         return path;
     }
+    string Player::getAdvisor() {
+        return advisor;
+    }
+    string Player::getAdvisorDesc() {
+        return advisorDesc;
+    }
 
 
     // setters
@@ -86,7 +95,25 @@ Player::Player(string playerName, string chosenCharacter, int xp, int acc, int e
     void Player::setPath(int playerPath) {
         path = playerPath;
     }
+    void Player::setAdvisor(string playerAdvisor) {
+        advisor = playerAdvisor;
+    }
+    void Player::setAdvisorDesc(string playerAdvisorDesc) {
+        advisorDesc = playerAdvisorDesc;
+    }
 
+    // get player stats
+    vector<string> Player::getAllStats() {
+        vector<string> stats;
+
+        stats.push_back(to_string(getExp()));
+        stats.push_back(to_string(getAccuracy()));
+        stats.push_back(to_string(getEfficiency()));
+        stats.push_back(to_string(getInsight()));
+        stats.push_back(to_string(getDiscoveryPoints()));
+
+        return stats;
+    }
 
     // set player stats
     void Player::setAllStats(vector<string> stats) {
@@ -101,7 +128,7 @@ Player::Player(string playerName, string chosenCharacter, int xp, int acc, int e
 
 
     // display menu
-    void Player::displayMenu() {
+    int Player::displayMenu() {
 
         int playerInput = 0;
 
@@ -110,18 +137,25 @@ Player::Player(string playerName, string chosenCharacter, int xp, int acc, int e
         cout << underline << "Menu" << reset << endl;
         cout << "(1) Check Player Progress" << endl;
         cout << "(2) Review Character" << endl;
-        cout << "(3) Check Position" << endl;
+        cout << "(3) Check Current Leaderboard" << endl;
         cout << "(4) Review Advisor" << endl;
         cout << "(5) Move Forward" << endl;
 
         cin >> playerInput;
-
+        cin.ignore();
+        cout << "" << endl;
 
         switch(playerInput) {
             case 1:
                 cout << "(1) Review Discovery Points or (2) Review Trait stats" << endl;
                 int playerSubChoice;
                 cin >> playerSubChoice;
+                if (playerSubChoice != 1 && playerSubChoice != 2) {
+                    cout << "Invalid Selection" << endl;
+                    break;
+                    }
+                cin.ignore();
+                cout << "" << endl;
                 switch(playerSubChoice) {
                     case 1: {
                         int displayDP = getDiscoveryPoints();
@@ -144,7 +178,148 @@ Player::Player(string playerName, string chosenCharacter, int xp, int acc, int e
 
                         break;
                     }
+                    
                 }
+                break;
+            case 2: {
+                cout << "Character: " << getCharacter() << endl;
+                cout << "Experience Points: " << getExp() << endl;
+                cout << "" << endl;
+                break;
+            }
+            case 3: {
+                    return 3;
+                }
+            case 4: {
+
+                if (getPath() == 2) {
+                    cout << "" << endl;
+                    cout << "You don't have an advisor" << endl;
+                    cout << "Would you like one? (Y or N) (-20 Exp)" << endl;
+                    char user_input;
+                    cin >> user_input;
+                    if (tolower(user_input) != 'y' && tolower(user_input) != 'n') {
+                        cout << "Invalid Selection" << endl;
+                        break;
+                    }
+                    cin.ignore();
+
+                    if (tolower(user_input) == 'y' && getExp() >= 20) {
+                        characterSetUp chooseAdvisor;
+                        int newAdvisor = chooseAdvisor.chooseAdvisor();
+                        switch(newAdvisor) {
+                            case 1:
+                                setAdvisor("Dr. Aliquot");
+                                setAdvisorDesc("A master of the \"wet lab\", assisting in avoiding contamination");
+                                break;
+                            case 2:
+                                setAdvisor("Dr. Assembler");
+                                setAdvisorDesc("An expert who helps improve efficiency and streamlines pipelines");
+                                break;
+                            case 3:
+                                setAdvisor("Dr. Pop-Gen");
+                                setAdvisorDesc("A genetics specialist with insight for identifying rare genetic variants");
+                                break;
+                            case 4:
+                                setAdvisor("Dr. Bio-Script");
+                                setAdvisorDesc("The genius behind the data analysis, helps debug code");
+                                break;
+                            case 5:
+                                setAdvisor("Dr. Loci");
+                                setAdvisorDesc("Your biggest supporter assisting you in learning the equipment");
+                                break;
+                        }
+
+                        cout << "Your new advisor is: " << getAdvisor() << endl;
+                        cout << "-20 Exp" << endl;
+                        setExp(getExp() - 20);
+                    }
+
+                    else if (tolower(user_input) == 'y' && getExp() < 20) {
+                        cout << "You don't have enough experience points to get an advisor yet" << endl;
+                        break;
+                    }
+
+                    else {break;}
+
+                    break;
+                }
+
+                else {
+                    cout << "(1) Review Advisor Abilities or (2) Change Advisor (-10 Exp)" << endl;
+                    int playerSubChoice;
+                    cin >> playerSubChoice;
+                    if (playerSubChoice != 1 && playerSubChoice != 2) {
+                        cout << "Invalid Selection" << endl;
+                        break;
+                    }
+                    cin.ignore();
+                    cout << "" << endl;
+                    switch(playerSubChoice) {
+                        case 1: {   
+                            cout << "" << endl;
+                            cout << underline << "Details About Your Advisor" << reset << endl;
+                            cout << getAdvisor() << ": " << endl;
+                            cout << getAdvisorDesc() << endl;
+                            cout << "" << endl;
+                            break;
+                        }
+                        case 2: {
+                            characterSetUp chooseAdvisor;
+                            string currentAdvisor = getAdvisor();
+
+                            if (getExp() < 10) {
+                                cout << "You don't have enough Exp for a new advisor" << endl;
+                                break;
+                            }
+                            
+                            int newAdvisor = chooseAdvisor.chooseAdvisor();
+                        
+                            switch(newAdvisor) {
+                                case 1:
+                                    setAdvisor("Dr. Aliquot");
+                                    setAdvisorDesc("A master of the \"wet lab\", assisting in avoiding contamination");
+                                    break;
+                                case 2:
+                                    setAdvisor("Dr. Assembler");
+                                    setAdvisorDesc("An expert who helps improve efficiency and streamlines pipelines");
+                                    break;
+                                case 3:
+                                    setAdvisor("Dr. Pop-Gen");
+                                    setAdvisorDesc("A genetics specialist with insight for identifying rare genetic variants");
+                                    break;
+                                case 4:
+                                    setAdvisor("Dr. Bio-Script");
+                                    setAdvisorDesc("The genius behind the data analysis, helps debug code");
+                                    break;
+                                case 5:
+                                    setAdvisor("Dr. Loci");
+                                    setAdvisorDesc("Your biggest supporter assisting you in learning the equipment");
+                                    break;
+                            }
+
+                            if (currentAdvisor == getAdvisor()) {
+                                cout << "" << endl;
+                                cout << "You already have this advisor!" << endl;
+                                break;
+                            }
+                            
+                            else {
+                                cout << "Your new advisor is: " << getAdvisor() << endl;
+                                cout << "-10 Exp" << endl;
+                                setExp(getExp() - 10);
+                                break;
+                            }
+                        }
+                    }
+                    break;
+                }
+                }
+            case 5: {
+                    return 5;
+            }
         }
         }
+
+    return 0;
     }

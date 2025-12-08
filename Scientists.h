@@ -1,7 +1,9 @@
 #include <string>
 #include <vector>
 
-#pragma once
+#ifndef SCIENTISTS_H
+#define SCIENTISTS_H
+
 using namespace std;
 
 class characterSetUp {
@@ -15,6 +17,7 @@ class characterSetUp {
 
     public:
         // Constructor
+        characterSetUp();
         characterSetUp(string file);
 
 
@@ -34,5 +37,7 @@ class characterSetUp {
         string selectCharacter();
         int choosePath();
         vector<string> logPlayerCharacterStats();
-        string chooseAdvisor();
+        int chooseAdvisor();
 };
+
+#endif
