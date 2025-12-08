@@ -412,6 +412,8 @@ int main() {
             type_text(": ");
             type_text(to_string(playerTwo.getDiscoveryPoints()));
             type_text(" Discovery Points");
+            cout << "" << endl;
+            cout << "" << endl;
 
             if (playerOne.getDiscoveryPoints() > playerTwo.getDiscoveryPoints()) {
                 type_text(playerOne.getName());

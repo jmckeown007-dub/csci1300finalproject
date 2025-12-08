@@ -618,6 +618,13 @@ Player Board::tileTrigger(Player player, char tileColor, int player_index) {
             int dnaTwoLength = rand() % 9 + 4;
             string strand1 = pinkFeatures.randomDNAGenerator(dnaOneLength);
             string strand2 = pinkFeatures.randomDNAGenerator(dnaTwoLength); // variables for parameters for second DNA sequence function and task
+
+            while (strand1.length() == strand2.length()) {
+                dnaOneLength = rand() % 9 + 4;
+                dnaTwoLength = rand() % 9 + 4;
+                strand1 = pinkFeatures.randomDNAGenerator(dnaOneLength);
+                strand2 = pinkFeatures.randomDNAGenerator(dnaTwoLength);
+            }
             if (strand2 > strand1) {
                 string temp;
                 temp = strand1;
@@ -632,8 +639,8 @@ Player Board::tileTrigger(Player player, char tileColor, int player_index) {
             cout << "DNA Strand: " << strand1 << endl;
             cout << "DNA Strand: " << strand2 << endl;
             cout << "" << endl;
-            cout << "At what position (integral value), on the longer strand, does the shorter strand have the best similarity score? " << endl;
-            cout << "Remember, there can be multiple right answers." << endl;
+            cout << "At what position (integral value) on the longer strand, does the shorter strand have the best similarity score? " << endl;
+            cout << "Remember, there could be multiple right answers, just pick one." << endl;
             cin >> user_answer;
             cin.ignore();
             cout << "" << endl;
@@ -678,12 +685,12 @@ Player Board::tileTrigger(Player player, char tileColor, int player_index) {
             int user_answer;
 
             cout << "For this difficult task, you will be provided with two DNA strand halves. You must calculate the total number of substitutions wherever the two strand halves have the greatest similarity." << endl;
-            cout << "Remember, when looking for similarity, the shorter DNA piece must fit completely onto the longer one. No overhangs allowed!";
+            cout << "Remember, if length differs when looking for similarity, the shorter DNA piece must fit completely onto the longer one. No overhangs allowed!";
             cout << "" << endl;
             cout << "DNA Strand: " << strand1 << endl;
             cout << "DNA Strand: " << strand2 << endl;
             cout << "" << endl;
-            cout << "At the point of greatest similarity, how many substitutions are there?" << endl;
+            cout << "At the position of greatest similarity (integral value), how many substitutions are there?" << endl;
             cin >> user_answer;
             cin.ignore();
             cout << "" << endl;
@@ -720,7 +727,7 @@ Player Board::tileTrigger(Player player, char tileColor, int player_index) {
             string strand = brownFeatures.randomDNAGenerator(dnaLength); // variables for parameters for fourth DNA sequence function and task
             string user_answer;
 
-            cout << "For this task, you will be giving a DNA strand half, and you must provide the corresponding RNA strand. (Hint, T = U)" << endl;
+            cout << "For this task, you will be given a DNA strand half, and you must provide the corresponding RNA strand. (Hint, T = U)" << endl;
             cout << "" << endl;
             cout << "DNA Strand: " << strand << endl;
             cout << "What would be the corresponding RNA Strand?" << endl;
