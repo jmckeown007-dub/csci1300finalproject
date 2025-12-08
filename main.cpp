@@ -315,12 +315,13 @@ int main() {
             std::this_thread::sleep_for(std::chrono::seconds(1));
 
             for (int i = 0; i < roll; i++) {
-                if (gameBoard.movePlayer(0)) {
-                    //cout << "Player One has reached the end!" << endl;
-                    type_text("Player One has reached the end!");
-                    cout << "" << endl;
-                    cout << "" << endl;
+                
+               gameBoard.movePlayer(0);
+
+                if (gameBoard.getTileColor(0, gameBoard.getPlayerPosition(0)) == 'O') { // check if player is on an orange tile
+                    cout << "Player One has reached the end!" << endl;
                     playerOneEnd = true;
+                    break; // stop moving further
                 }
             }
 
@@ -370,11 +371,13 @@ int main() {
             std::this_thread::sleep_for(std::chrono::seconds(1));
 
             for (int i = 0; i < roll2; i++) {
-                if (gameBoard.movePlayer(1)) {
-                    cout << "Player Two has reached the end!" << endl;
+
+                gameBoard.movePlayer(1);
                     
-                    cout << "" << endl;
+                if (gameBoard.getTileColor(1, gameBoard.getPlayerPosition(1)) == 'O') { // check if player is on an orange tile
+                    cout << "Player Two has reached the end!" << endl;
                     playerTwoEnd = true;
+                    break; // stop moving further
                 }
             }
 
