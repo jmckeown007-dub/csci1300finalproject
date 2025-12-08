@@ -89,10 +89,10 @@ bool identifyMutations(string input_strand, string target_strand, int answer){
         }
         // Printing deletions before and after target strand
         for (int i = 0; i < bestPosition; i++){
-            cout << "Deletion at position " << i + 1 << ": "<< input_strand[i] << " is deleted in target strand" << endl;
+            //cout << "Deletion at position " << i + 1 << ": "<< input_strand[i] << " is deleted in target strand" << endl;
         }
         for (int i = bestPosition + tgtLength; i < inLength; i++){
-            cout << "Deletion at position " << i + 1 << ": "<< input_strand[i] << " is deleted in target strand" << endl;
+            //cout << "Deletion at position " << i + 1 << ": "<< input_strand[i] << " is deleted in target strand" << endl;
         }
     }
     // If the target strand is Longer than the input strand
@@ -111,24 +111,24 @@ bool identifyMutations(string input_strand, string target_strand, int answer){
         }
         // Printing insertions before and after target strand
         for (int i = 0; i < bestPosition; i++){
-            cout << "Insertion at position " << i + 1 << ": "<< input_strand[i] << " is inserted in input strand" << endl;
+            //cout << "Insertion at position " << i + 1 << ": "<< input_strand[i] << " is inserted in input strand" << endl;
         }
         for (int i = bestPosition + tgtLength; i < inLength; i++){
-            cout << "Insertion at position " << i + 1 << ": "<< input_strand[i] << " is inserted in input strand" << endl;
+            //cout << "Insertion at position " << i + 1 << ": "<< input_strand[i] << " is inserted in input strand" << endl;
         }
     }
     // Printing Mutations within aligned positions
     for (int i = bestPosition; i < bestPosition + tgtLength; i++){
         if (target_strand[i] != input_strand[i+bestPosition]){
-            cout << "Substitution at position " << i+1 << ": " << input_strand[i] << " -> " << target_strand[i+bestPosition] << endl;
+            //cout << "Substitution at position " << i+1 << ": " << input_strand[i] << " -> " << target_strand[i+bestPosition] << endl;
             substitutions++;
         }
         else{
-            cout << "Position " << i+1 << " is correct" << endl;
+            //cout << "Position " << i+1 << " is correct" << endl;
         }
     }
-    cout << "Best Position: "<< bestPosition << endl;
-    if (answer == substitutions){
+    //cout << "Best Position: "<< bestPosition << endl;
+    if (answer == substitutions + lengthDiff){
         return true;
     }
     else{
